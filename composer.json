@@ -1,0 +1,13 @@
+{
+    "name": "ictcollege/stagemarkt",
+    "description": "CakePHP webservice for Stagemarkt",
+    "type": "cakephp-plugin",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Marlin Cremers",
+            "email": "m.cremers@cvo-technologies.com"
+        }
+    ],
+    "require": {}
+}
