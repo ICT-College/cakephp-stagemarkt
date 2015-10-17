@@ -13,6 +13,11 @@ use DebugKit\DebugTimer;
 class PositionsShell extends Shell
 {
 
+    /**
+     * Start an import of positions
+     *
+     * @return void
+     */
     public function import()
     {
         $import = $this->Tasks->load('IctCollege/Stagemarkt.PositionsImport');
@@ -28,6 +33,9 @@ class PositionsShell extends Shell
         $import->import($conditions);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getOptionParser()
     {
         $consoleOptionParser = parent::getOptionParser();

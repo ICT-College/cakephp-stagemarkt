@@ -1,6 +1,6 @@
 <?php
 
-namespace IctCollege\Stagemarkt\Response;
+namespace IctCollege\Stagemarkt\Soap\Response;
 
 class Response
 {
@@ -8,7 +8,7 @@ class Response
     private $__code;
 
     /**
-     * @param mixed $code
+     * @param int $code The response code returned by the Stagemarkt API
      *
      * @return $this
      */
@@ -18,5 +18,4 @@ class Response
 
         return $this;
     }
-
 }

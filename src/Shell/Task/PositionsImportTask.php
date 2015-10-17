@@ -11,9 +11,15 @@ use Cake\ORM\TableRegistry;
 use DebugKit\DebugTimer;
 use Muffin\Webservice\Query;
 
+/**
+ * @property \IctCollege\Stagemarkt\Model\Endpoint\PositionsEndpoint Positions
+ */
 class PositionsImportTask extends Shell
 {
 
+    /**
+     * {@inheritDoc}
+     */
     public function initialize()
     {
         parent::initialize();
@@ -23,6 +29,13 @@ class PositionsImportTask extends Shell
         $this->loadModel('IctCollege/Stagemarkt.Positions', 'Endpoint');
     }
 
+    /**
+     * Imports conditions with specified conditions
+     *
+     * @param array $conditions The conditions for positions to match
+     *
+     * @return void
+     */
     public function import($conditions)
     {
         $positionsTable = TableRegistry::get('Positions');
@@ -54,9 +67,6 @@ class PositionsImportTask extends Shell
                 } else {
                     $localPosition = Position::createFromResource($resource);
                 }
-
-//                $remoteDetailPosition = $this->Positions->get($remoteEntity->id);
-//                $localPosition->applyResource($remoteDetailPosition);
 
                 if ($resource->has('company')) {
                     if ($positionsTable->Companies->exists(['stagemarkt_id' => $resource->company->id])) {
@@ -106,6 +116,9 @@ class PositionsImportTask extends Shell
         $this->out(__('Import took {0}, that\'s {1} off the estimate', Time::createFromTimestamp($duration)->format('H:m:s'), Time::createFromTimestamp(abs($duration - $timeEstimate))->format('H:m:s')));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getOptionParser()
     {
         $consoleOptionParser = parent::getOptionParser();
@@ -116,15 +129,14 @@ class PositionsImportTask extends Shell
     }
 
     /**
+     * @param array $conditions The set of conditions to apply
+     *
      * @return Query
      */
     protected function _importReadQuery(array $conditions = [])
     {
-        $query = $this->Positions->find();
-        $query->limit(25);
-        $query->where($conditions);
-
-        return $query;
+        return $this->Positions->find()
+            ->limit(25)
+            ->where($conditions);
     }
-
 }

@@ -2,24 +2,25 @@
 
 namespace IctCollege\Stagemarkt\Soap;
 
-use IctCollege\Stagemarkt\Response\SearchResponse;
-use IctCollege\Stagemarkt\Model\Resource\Position;
-use IctCollege\Stagemarkt\Model\Resource\Company;
-use IctCollege\Stagemarkt\Model\Resource\StudyProgram;
-use IctCollege\Stagemarkt\Model\Resource\AddressCompany;
-use IctCollege\Stagemarkt\Model\Resource\Accreditation;
-use Muffin\Webservice\Query;
-use Muffin\Webservice\ResultSet;
+use IctCollege\Stagemarkt\Soap\Response\SearchResponse;
 
 /**
  * Class Search
  * @package Stagemarkt\Soap
  *
- * @method SearchResponse Zoeken(array $parameters)
+ * @method \IctCollege\Stagemarkt\Soap\Response\SearchResponse Zoeken(array $parameters)
  */
-class Search extends StagemarktService
+class Search extends SoapClient
 {
 
+    /**
+     * Search for positions and companies
+     *
+     * @param array $conditions The conditions to apply search with
+     * @param array $options The options to apply to the search
+     *
+     * @return \IctCollege\Stagemarkt\Soap\Response\SearchResponse
+     */
     public function search(array $conditions, array $options = [])
     {
         $defaultOptions = [
@@ -117,9 +118,16 @@ class Search extends StagemarktService
         return 'ZoekenResult';
     }
 
-    public function __call($function_name, $arguments)
+    /**
+     * {@inheritDoc}
+     *
+     * @return \IctCollege\Stagemarkt\Soap\Response\SearchResponse
+     *
+     * @throws Exception\NoLicenseException
+     */
+    public function __call($functionName, $arguments)
     {
-        $soapResponse = parent::__call($function_name, $arguments);
+        $soapResponse = parent::__call($functionName, $arguments);
 
         $positions = [];
         $companies = [];
@@ -131,78 +139,58 @@ class Search extends StagemarktService
 
             foreach ($results as $result) {
                 if (isset($result->LeerplaatsId)) {
-                    $position = new Position([
+                    $position = [
                         'id' => $result->LeerplaatsId,
-                        'company' => new Company([
+                        'company' => [
                             'id' => $result->CodeLeerbedrijf,
-                            'address' => new AddressCompany([
+                            'address' => [
                                 'address' => $result->Vestigingsadres->Straat,
                                 'postcode' => $result->Vestigingsadres->Postcode,
                                 'city' => $result->Vestigingsadres->Plaats,
-                                'country' => $result->Vestigingsadres->Land,
-                            ], [
-                                'markClean' => true,
-                                'markNew' => false,
-                            ]),
+                                'country' => $this->stagemarktClient()->convertCountry($result->Vestigingsadres->Land)
+                            ],
                             'name' => $result->LeerbedrijfNaam
-                        ], [
-                            'markClean' => true,
-                            'markNew' => false,
-                        ]),
-                        'study_program' => new StudyProgram([
+                        ],
+                        'study_program' => [
                             'id' => $result->Opleidingen->Opleiding->Crebonummer,
-                            'description' => $result->Opleidingen->Opleiding->Omschrijving,
-                        ], [
-                            'markClean' => true,
-                            'markNew' => false,
-                        ]),
+                            'description' => $result->Opleidingen->Opleiding->Omschrijving
+                        ],
                         'learning_pathway' => $result->Leerweg,
                         'kind' => $result->LeerplaatsSoort,
                         'description' => ($result->VacatureLeerplaatsOmschrijving) ? $result->VacatureLeerplaatsOmschrijving : null,
                         'amount' => $result->LeerplaatsAantal
-                    ], [
-                        'markClean' => true,
-                        'markNew' => false,
-                    ]);
+                    ];
 
                     $positions[] = $position;
                 } else {
                     if (isset($companies[$result->CodeLeerbedrijf])) {
-                        $companies[$result->CodeLeerbedrijf]->accreditation[] = new Accreditation([
+                        $companies[$result->CodeLeerbedrijf]['accreditation'][] = [
                             'study_program_id' => $result->Erkenning->Crebonummer,
-                        ], [
-                            'markClean' => true,
-                            'markNew' => false,
-                        ]);
+                        ];
                         continue;
                     }
 
-                    $company = new Company([
+
+
+                    $company = [
                         'id' => $result->CodeLeerbedrijf,
-                        'address' => new AddressCompany([
-                            'address_line' => $result->Vestigingsadres->Straat,
+                        'address' => [
+                            'address' => $result->Vestigingsadres->Straat,
                             'postcode' => $result->Vestigingsadres->Postcode,
                             'city' => $result->Vestigingsadres->Plaats,
-                            'country' => $result->Vestigingsadres->Land,
-                        ], [
-                            'markClean' => true,
-                            'markNew' => false,
-                        ]),
+                            'country' => $this->stagemarktClient()->convertCountry($result->Vestigingsadres->Land),
+                        ],
                         'accreditation' => [
-                            new Accreditation([
+                            [
                                 'study_program_id' => $result->Erkenning->Crebonummer,
-                            ], [
-                                'markClean' => true,
-                                'markNew' => false,
-                            ])
+                            ]
                         ],
                         'name' => $result->LeerbedrijfNaam,
-                    ], [
-                        'markClean' => true,
-                        'markNew' => false,
-                    ]);
+                        'description' => ($result->VacatureLeerplaatsOmschrijving) ? $result->VacatureLeerplaatsOmschrijving : null,
+                        'learning_pathway' => $result->Leerweg
+                    ];
 
-                    $companies[$company->id] = $company;
+                    $companies[$company['id']] = $company;
                 }
             }
 
@@ -216,40 +204,5 @@ class Search extends StagemarktService
             ->total($soapResponse->AantalResultatenTotaal);
 
         return $response;
-    }
-
-    public function execute(Query $query, array $options = [])
-    {
-        if ($query->action() !== Query::ACTION_READ) {
-            throw new \BadMethodCallException;
-        }
-
-        if (isset($query->where()['id'])) {
-            return $this->stagemarktClient()->detailsClient()->execute($query);
-        }
-
-        $options = [];
-        if ($query->page()) {
-            $options['page'] = $query->page();
-        }
-        if ($query->limit()) {
-            $options['limit'] = $query->limit();
-        }
-        $response = $this->search(
-            $query->where(), $options
-        );
-
-        switch ($query->where()['type']) {
-            case 'company':
-                $entities = $response->companies();
-
-                break;
-            case 'position':
-                $entities = $response->positions();
-
-                break;
-        }
-
-        return new ResultSet($entities, $response->total());
     }
 }

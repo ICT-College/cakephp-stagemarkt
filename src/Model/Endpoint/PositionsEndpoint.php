@@ -2,49 +2,51 @@
 
 namespace IctCollege\Stagemarkt\Model\Endpoint;
 
-use Cake\Datasource\ConnectionManager;
+use IctCollege\Stagemarkt\Model\SearchableTrait;
 use Muffin\Webservice\Model\Endpoint;
 use Muffin\Webservice\Schema;
-use IctCollege\Stagemarkt\Model\SearchableTrait;
 
 class PositionsEndpoint extends Endpoint
 {
 
     use SearchableTrait;
 
-    public $filterArgs = array(
-        'company_id' => array(
+    public $filterArgs = [
+        'company_id' => [
             'type' => 'value'
-        ),
-        'company_name' => array(
+        ],
+        'company_name' => [
             'type' => 'like'
-        ),
-        'company_address_number' => array(
+        ],
+        'company_address_number' => [
             'type' => 'value'
-        ),
-        'company_address_street' => array(
+        ],
+        'company_address_street' => [
             'type' => 'value'
-        ),
-        'company_address_postcode' => array(
+        ],
+        'company_address_postcode' => [
             'type' => 'value'
-        ),
-        'company_address_city' => array(
+        ],
+        'company_address_city' => [
             'type' => 'like'
-        ),
-        'company_address_country' => array(
+        ],
+        'company_address_country' => [
             'type' => 'value'
-        ),
-        'study_program_id' => array(
+        ],
+        'study_program_id' => [
             'type' => 'value'
-        ),
-        'learning_pathway' => array(
+        ],
+        'learning_pathway' => [
             'type' => 'value'
-        ),
-        'description' => array(
+        ],
+        'description' => [
             'type' => 'like'
-        ),
-    );
+        ],
+    ];
 
+    /**
+     * {@inheritDoc}
+     */
     public function initialize(array $config)
     {
         parent::initialize($config);

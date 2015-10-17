@@ -3,17 +3,9 @@
 namespace IctCollege\Stagemarkt\Soap;
 
 use Cake\I18n\Time;
-use Muffin\Webservice\ResultSet;
-use Muffin\Webservice\Query;
-use IctCollege\Stagemarkt\Model\Resource\AddressCompany;
-use IctCollege\Stagemarkt\Model\Resource\Company;
-use IctCollege\Stagemarkt\Model\Resource\ContactpersonCompany;
-use IctCollege\Stagemarkt\Model\Resource\Position;
-use IctCollege\Stagemarkt\Model\Resource\QualificationPart;
-use IctCollege\Stagemarkt\Model\Resource\StudyProgram;
-use IctCollege\Stagemarkt\Response\DetailsResponse;
+use IctCollege\Stagemarkt\Soap\Response\DetailsResponse;
 
-class Details extends StagemarktService
+class Details extends SoapClient
 {
 
     /**
@@ -58,64 +50,46 @@ class Details extends StagemarktService
         return 'GeefDetailsResult';
     }
 
-    public function __call($function_name, $arguments)
+    public function __call($functionName, $arguments)
     {
-        $soapResponse = parent::__call($function_name, $arguments);
+        $soapResponse = parent::__call($functionName, $arguments);
 
         if (isset($arguments[0]['LeerplaatsId'])) {
-            $position = new Position([
+            $position = [
                 'id' => $arguments[0]['LeerplaatsId'],
-                'company' => new Company([
+                'company' => [
                     'id' => $soapResponse->CodeLeerbedrijf,
-                    'address' => new AddressCompany([
+                    'address' => [
                         'address' => $soapResponse->Vestigingsadres->Straat,
                         'postcode' => $soapResponse->Vestigingsadres->Postcode,
                         'city' => $soapResponse->Vestigingsadres->Plaats,
-                        'country' => $soapResponse->Vestigingsadres->Land,
-                    ], [
-                        'markClean' => true,
-                        'markNew' => false,
-                    ]),
-                    'correspondence_address' => new AddressCompany([
+                        'country' => $this->stagemarktClient()->convertCountry($soapResponse->Vestigingsadres->Land),
+                    ],
+                    'correspondence_address' => [
                         'address' => $soapResponse->Correspondentieadres->Straat,
                         'postcode' => $soapResponse->Correspondentieadres->Postcode,
                         'city' => $soapResponse->Correspondentieadres->Plaats,
-                        'country' => $soapResponse->Correspondentieadres->Land,
-                    ], [
-                        'markClean' => true,
-                        'markNew' => false,
-                    ]),
-                    'condactperson' => new ContactpersonCompany([
+                        'country' => $this->stagemarktClient()->convertCountry($soapResponse->Correspondentieadres->Land),
+                    ],
+                    'condactperson' => [
                         'name' => $soapResponse->Contactpersoon->Naam,
                         'email' => $soapResponse->Contactpersoon->Email,
                         'telephone' => $soapResponse->Contactpersoon->Telefoonnummer,
-                    ], [
-                        'markClean' => true,
-                        'markNew' => false,
-                    ]),
+                    ],
                     'name' => $soapResponse->Naam,
                     'website' => @$soapResponse->WebsiteUrl,
                     'email' => @$soapResponse->Email,
                     'telephone' => @$soapResponse->Telefoonnummer,
                     'branch' => @$soapResponse->Branche,
-                ], [
-                    'markClean' => true,
-                    'markNew' => false,
-                ]),
-                'study_program' => new StudyProgram([
+                ],
+                'study_program' => [
                     'id' => $soapResponse->Opleidingen->Opleiding->Crebonummer,
                     'description' => $soapResponse->Opleidingen->Opleiding->Omschrijving,
-                ], [
-                    'markClean' => true,
-                    'markNew' => false,
-                ]),
+                ],
                 'description' => ($soapResponse->Omschrijving) ? $soapResponse->Omschrijving : null,
                 'start' => new Time($soapResponse->Startdatum, new \DateTimeZone('Europe/Amsterdam')),
                 'end' => new Time($soapResponse->Einddatum, new \DateTimeZone('Europe/Amsterdam')),
-            ], [
-                'markClean' => true,
-                'markNew' => false,
-            ]);
+            ];
 
             $qualificationParts = [];
             foreach ($soapResponse->Kwalificatieonderdelen->Kwalificatieonderdeel as $qualificationPart) {
@@ -127,13 +101,10 @@ class Details extends StagemarktService
                     $description = substr($description, 3);
                 }
 
-                $qualificationParts[(int) $index] = new QualificationPart([
+                $qualificationParts[(int)$index] = [
                     'type' => $qualificationPart->Type,
                     'description' => $description
-                ], [
-                    'markClean' => true,
-                    'markNew' => false,
-                ]);
+                ];
             }
             ksort($qualificationParts);
 
@@ -143,19 +114,16 @@ class Details extends StagemarktService
             $response->setCode($soapResponse->Signaalcode)
                 ->position($position);
         } elseif (isset($arguments[0]['CodeLeerbedrijf'])) {
-            $company = new Company([
+            $company = [
                 'address' => $soapResponse->Vestigingsadres->Straat,
                 'postcode' => $soapResponse->Vestigingsadres->Postcode,
                 'city' => $soapResponse->Vestigingsadres->Plaats,
-                'country' => $soapResponse->Vestigingsadres->Land,
+                'country' => $this->stagemarktClient()->convertCountry($soapResponse->Vestigingsadres->Land),
                 'correspondence_address' => $soapResponse->Correspondentieadres->Straat,
                 'correspondence_postcode' => $soapResponse->Correspondentieadres->Postcode,
                 'correspondence_city' => $soapResponse->Correspondentieadres->Plaats,
-                'correspondence_country' => $soapResponse->Correspondentieadres->Land,
-            ], [
-                'markClean' => true,
-                'markNew' => false
-            ]);
+                'correspondence_country' => $this->stagemarktClient()->convertCountry($soapResponse->Correspondentieadres->Land),
+            ];
 
             $fields = [
                 'id' => 'CodeLeerbedrijf',
@@ -173,22 +141,18 @@ class Details extends StagemarktService
                     continue;
                 }
 
-                $company->set($field, trim($soapResponse->{$remoteField}));
+                $company[$field] = trim($soapResponse->{$remoteField});
             }
 
-            if ($company->get('website')) {
-                $website = $company->get('website');
+            if (!empty($company['website'])) {
+                $website = $company['website'];
 
                 if ((substr($website, 0, 7) !== 'http://') && (substr($website, 0, 8) !== 'https://')) {
                     $website = 'http://' . $website;
                 }
 
-                $company->unsetProperty('website');
-
-                $company->set('website', $website);
+                $company['website'] = $website;
             }
-
-            $company->clean();
 
             $response = new DetailsResponse();
             $response->setCode($soapResponse->Signaalcode)
@@ -198,27 +162,5 @@ class Details extends StagemarktService
         }
 
         return $response;
-    }
-
-    public function execute(Query $query, array $options = [])
-    {
-        if ($query->action() !== Query::ACTION_READ) {
-            throw new \BadMethodCallException;
-        }
-
-        $response = $this->details($query->where(), $query->getOptions());
-
-        switch ($query->where()['type']) {
-            case 'company':
-                $entity = $response->company();
-
-                break;
-            case 'position':
-                $entity = $response->position();
-
-                break;
-        }
-
-        return new ResultSet([$entity], 1);
     }
 }

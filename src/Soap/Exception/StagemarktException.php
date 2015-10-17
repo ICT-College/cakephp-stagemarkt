@@ -1,6 +1,6 @@
 <?php
 
-namespace IctCollege\Stagemarkt\Error;
+namespace IctCollege\Stagemarkt\Soap\Exception;
 
 class StagemarktException extends \Exception
 {

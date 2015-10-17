@@ -2,22 +2,24 @@
 
 namespace IctCollege\Stagemarkt\Model\Endpoint;
 
-use Cake\Datasource\ConnectionManager;
+use IctCollege\Stagemarkt\Model\SearchableTrait;
 use Muffin\Webservice\Model\Endpoint;
 use Muffin\Webservice\Schema;
-use IctCollege\Stagemarkt\Model\SearchableTrait;
 
 class CompaniesEndpoint extends Endpoint
 {
 
     use SearchableTrait;
 
-    public $filterArgs = array(
-        'name' => array(
+    public $filterArgs = [
+        'name' => [
             'type' => 'like'
-        ),
-    );
+        ],
+    ];
 
+    /**
+     * {@inheritDoc}
+     */
     public function initialize(array $config)
     {
         parent::initialize($config);
@@ -50,5 +52,19 @@ class CompaniesEndpoint extends Endpoint
         ]);
 
         return $query;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function get($primaryKey, $options = [])
+    {
+        $this->webservice('details');
+
+        $result = parent::get($primaryKey, $options);
+
+        $this->webservice('search');
+
+        return $result;
     }
 }

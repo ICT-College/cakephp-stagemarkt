@@ -36,17 +36,11 @@ class StagemarktTest extends TestCase
     public function testConfigName()
     {
         $this->assertEquals('test', $this->driver->configName());
-
-        $driver = new Stagemarkt([
-            'license' => '123'
-        ]);
-
-        $this->assertEquals('', $driver->configName());
     }
 
     public function testLogger()
     {
-        $this->assertInstanceOf('Cake\Database\Log\QueryLogger', $this->driver->logger());
+        $this->assertNull($this->driver->logger());
     }
 
     public function testLogQueries()

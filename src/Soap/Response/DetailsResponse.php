@@ -1,9 +1,6 @@
 <?php
 
-namespace IctCollege\Stagemarkt\Response;
-
-use IctCollege\Stagemarkt\Entity\Company;
-use IctCollege\Stagemarkt\Entity\Position;
+namespace IctCollege\Stagemarkt\Soap\Response;
 
 class DetailsResponse extends Response
 {
@@ -12,9 +9,9 @@ class DetailsResponse extends Response
     private $__company = [];
 
     /**
-     * @param Position $result
+     * @param array $result
      *
-     * @return $this
+     * @return array|$this
      */
     public function position($result = null)
     {
@@ -28,9 +25,9 @@ class DetailsResponse extends Response
     }
 
     /**
-     * @param Company $result
+     * @param array $result
      *
-     * @return $this
+     * @return array|$this
      */
     public function company($result = null)
     {

@@ -1,6 +1,6 @@
 <?php
 
-namespace IctCollege\Stagemarkt\Response;
+namespace IctCollege\Stagemarkt\Soap\Response;
 
 class SearchResponse extends Response
 {
@@ -12,7 +12,7 @@ class SearchResponse extends Response
     /**
      * @param array $results
      *
-     * @return $this
+     * @return array|$this
      */
     public function positions($results = null)
     {
@@ -28,7 +28,7 @@ class SearchResponse extends Response
     /**
      * @param array $results
      *
-     * @return $this
+     * @return array|$this
      */
     public function companies($results = null)
     {
