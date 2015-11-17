@@ -80,4 +80,18 @@ class PositionsEndpoint extends Endpoint
 
         return $query;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function get($primaryKey, $options = [])
+    {
+        $this->webservice('details');
+
+        $result = parent::get($primaryKey, $options);
+
+        $this->webservice('search');
+
+        return $result;
+    }
 }
