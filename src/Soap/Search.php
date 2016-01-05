@@ -160,7 +160,7 @@ class Search extends SoapClient
                         ],
                         'learning_pathway' => $result->Leerweg,
                         'kind' => $result->LeerplaatsSoort,
-                        'description' => ($result->VacatureLeerplaatsOmschrijving) ? $result->VacatureLeerplaatsOmschrijving : null,
+                        'description' => (@$result->VacatureLeerplaatsOmschrijving) ? $result->VacatureLeerplaatsOmschrijving : null,
                         'amount' => $result->LeerplaatsAantal
                     ];
 
