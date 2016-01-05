@@ -36,7 +36,7 @@ class Search extends SoapClient
         $parameters = [
             'AantalResultatenPerPagina' => $options['limit'],
             'Pagina' => $options['page'],
-            'ZoekInDeBuurt' => true
+            'ZoekInDeBuurt' => false
         ];
 
         switch ($conditions['type']) {
