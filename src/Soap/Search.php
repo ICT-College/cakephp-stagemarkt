@@ -52,6 +52,9 @@ class Search extends SoapClient
                     $parameters['LeerbedrijfNaam'] = $conditions['name'];
                     $parameters['LeerbedrijfNaamExact'] = ((substr($conditions['name'], 0, 1) !== '%') && (substr($conditions['name'], -1, 1) !== '%'));
                 }
+                if (isset($conditions['study_program_id'])) {
+                    $parameters['Crebonummer'] = $conditions['study_program_id'];
+                }
 
                 break;
             case 'position':
