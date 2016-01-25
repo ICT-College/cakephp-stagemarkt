@@ -9,11 +9,13 @@
             "email": "m.cremers@cvo-technologies.com"
         }
     ],
+    "require": {
+        "muffin/webservice": "dev-master"
+    },
     "require-dev": {
         "cakephp/cakephp": "dev-master#d83ca687a340a385f9233574e2d606b8d95cc685",
         "cakephp/cakephp-codesniffer": "2.*",
-        "phpunit/phpunit": "4.1.*",
-        "muffin/webservice": "dev-master"
+        "phpunit/phpunit": "4.1.*"
     },
     "autoload": {
         "psr-4": {

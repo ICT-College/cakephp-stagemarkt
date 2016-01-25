@@ -4,9 +4,65 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "82f134257ccd3c9cd8ec70790d92d05b",
-    "content-hash": "15af13a03de45c982aacb50c5f828126",
-    "packages": [],
+    "hash": "04e110770554f91ab5de304532f2d342",
+    "content-hash": "9412351f79356a56e1f8f2994ff29b1c",
+    "packages": [
+        {
+            "name": "muffin/webservice",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/UseMuffin/Webservice.git",
+                "reference": "724110821c9b59d612ac42a407101b1bd2b39146"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/UseMuffin/Webservice/zipball/724110821c9b59d612ac42a407101b1bd2b39146",
+                "reference": "724110821c9b59d612ac42a407101b1bd2b39146",
+                "shasum": ""
+            },
+            "require-dev": {
+                "cakephp/cakephp": "dev-master",
+                "cakephp/cakephp-codesniffer": "2.*",
+                "phpunit/phpunit": "4.1.*"
+            },
+            "type": "cakephp-plugin",
+            "autoload": {
+                "psr-4": {
+                    "Muffin\\Webservice\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jad Bitar",
+                    "homepage": "http://jadb.io",
+                    "role": "Author"
+                },
+                {
+                    "name": "ADmad",
+                    "homepage": "https://github.com/ADmad",
+                    "role": "Author"
+                },
+                {
+                    "name": "Others",
+                    "homepage": "https://github.com/usemuffin/webservice/graphs/contributors"
+                }
+            ],
+            "description": "Extremely simplistic webservices for CakePHP 3",
+            "homepage": "https://github.com/usemuffin/webservice",
+            "keywords": [
+                "api",
+                "cakephp",
+                "muffin",
+                "webservice"
+            ],
+            "time": "2016-01-20 11:54:21"
+        }
+    ],
     "packages-dev": [
         {
             "name": "aura/installer-default",
@@ -277,61 +333,6 @@
                 "password"
             ],
             "time": "2014-11-20 16:49:30"
-        },
-        {
-            "name": "muffin/webservice",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/UseMuffin/Webservice.git",
-                "reference": "724110821c9b59d612ac42a407101b1bd2b39146"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/UseMuffin/Webservice/zipball/724110821c9b59d612ac42a407101b1bd2b39146",
-                "reference": "724110821c9b59d612ac42a407101b1bd2b39146",
-                "shasum": ""
-            },
-            "require-dev": {
-                "cakephp/cakephp": "dev-master",
-                "cakephp/cakephp-codesniffer": "2.*",
-                "phpunit/phpunit": "4.1.*"
-            },
-            "type": "cakephp-plugin",
-            "autoload": {
-                "psr-4": {
-                    "Muffin\\Webservice\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jad Bitar",
-                    "homepage": "http://jadb.io",
-                    "role": "Author"
-                },
-                {
-                    "name": "ADmad",
-                    "homepage": "https://github.com/ADmad",
-                    "role": "Author"
-                },
-                {
-                    "name": "Others",
-                    "homepage": "https://github.com/usemuffin/webservice/graphs/contributors"
-                }
-            ],
-            "description": "Extremely simplistic webservices for CakePHP 3",
-            "homepage": "https://github.com/usemuffin/webservice",
-            "keywords": [
-                "api",
-                "cakephp",
-                "muffin",
-                "webservice"
-            ],
-            "time": "2016-01-20 11:54:21"
         },
         {
             "name": "nesbot/carbon",
@@ -1236,8 +1237,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "cakephp/cakephp": 20,
-        "muffin/webservice": 20
+        "muffin/webservice": 20,
+        "cakephp/cakephp": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
