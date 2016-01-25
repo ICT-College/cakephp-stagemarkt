@@ -13,17 +13,11 @@
         "cakephp/cakephp": "dev-master#d83ca687a340a385f9233574e2d606b8d95cc685",
         "cakephp/cakephp-codesniffer": "2.*",
         "phpunit/phpunit": "4.1.*",
-        "muffin/webservice": "dev-feature-orm"
+        "muffin/webservice": "dev-master"
     },
     "autoload": {
         "psr-4": {
             "IctCollege\\Stagemarkt\\": "src"
         }
-    },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/CVO-Technologies/cakephp-webservice.git"
-        }
-    ]
+    }
 }
